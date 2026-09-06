@@ -41,9 +41,36 @@ export const pinto = new PintoAuth({
 
 ---
 
-### 2. นำทางผู้ใช้ไปหน้า Login (`loginWithRedirect`)
+### 2. แสดงปุ่ม Login สำเร็จรูป (Pinto Login Button Component)
 
-ผูกกับปุ่ม "Log in with Pinto":
+คุณสามารถสร้างปุ่มล็อกอินทางการของ Pinto ที่ฝังรูปโลโก้ต้นฉบับมาให้ในตัว พร้อมปรับแต่ง Theme, ขนาด, รูปทรง และผูกกับ `auth` เพื่อให้กดแล้วนำทางไปล็อกอินได้ทันที:
+
+```ts
+import { renderPintoButton, createPintoButton } from '@pinto-app/sdk'
+
+// วิธีที่ 1: แปะลงใน HTML Container (เช่น <div id="login-container"></div>)
+renderPintoButton('#login-container', {
+  auth: pinto,               // คลิกปุ่มแล้วเรียก pinto.loginWithRedirect() ให้อัตโนมัติ
+  theme: 'dark',             // 'dark' (สีดำ) | 'light' (สีขาว) | 'brand' (สีม่วงแบรนด์) | 'outline'
+  size: 'medium',            // 'small' (36px) | 'medium' (44px) | 'large' (52px)
+  shape: 'rounded',          // 'rounded' (8px) | 'pill' (แคปซูล) | 'square' (เหลี่ยม)
+  text: 'เข้าสู่ระบบด้วย Pinto', // ข้อความบนปุ่ม
+  fullWidth: false,          // ขยายเต็มความกว้าง 100% หรือไม่
+})
+
+// วิธีที่ 2: รับเป็น HTMLButtonElement ไปผูกใน React, Vue, Svelte
+const btn = createPintoButton({
+  auth: pinto,
+  theme: 'brand',
+  shape: 'pill',
+})
+```
+
+---
+
+### 3. นำทางผู้ใช้ไปหน้า Login ด้วยตนเอง (`loginWithRedirect`)
+
+หากต้องการใช้ปุ่ม HTML ของตัวเอง สามารถผูกคำสั่งล็อกอินได้โดยตรง:
 
 ```ts
 // SDK จะสร้าง PKCE code_verifier, code_challenge (S256), state

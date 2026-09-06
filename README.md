@@ -35,17 +35,22 @@ pip install pinto-sdk
 
 ### 1. สร้าง URL หน้า Login (พร้อม PKCE อัตโนมัติ)
 
-#### 🔹 TypeScript / Browser
+#### 🔹 TypeScript / Browser (มีปุ่มสำเร็จรูปให้ใช้งานทันที!)
 ```ts
-import { PintoAuth } from '@pinto-app/sdk'
+import { PintoAuth, renderPintoButton } from '@pinto-app/sdk'
 
 const pinto = new PintoAuth({
   clientId: 'pinto-app_xxxxxxxx',
   redirectUri: 'https://myapp.com/auth/callback',
 })
 
-// นำทางไปหน้า Pinto Login พร้อม PKCE อัตโนมัติ
-await pinto.loginWithRedirect()
+// สร้างและแปะปุ่ม Login with Pinto สำเร็จรูป (ปรับแต่งธีม/ขนาดได้ตามต้องการ)
+renderPintoButton('#login-container', {
+  auth: pinto,
+  theme: 'dark',    // 'dark' | 'light' | 'brand' | 'outline'
+  size: 'medium',   // 'small' | 'medium' | 'large'
+  shape: 'rounded', // 'rounded' | 'pill' | 'square'
+})
 ```
 
 #### 🔹 Golang

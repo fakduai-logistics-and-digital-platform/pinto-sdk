@@ -1,6 +1,22 @@
 // Client / Browser Authentication
 export { PintoAuth, createPintoAuth, PintoAuth as PintoClient } from './auth.js'
 
+// Pinto Login Button & UI
+export {
+  createPintoButton,
+  getPintoButtonHtml,
+  renderPintoButton,
+} from './button.js'
+export type {
+  PintoButtonOptions,
+  PintoButtonShape,
+  PintoButtonSize,
+  PintoButtonTheme,
+} from './button.js'
+
+// Assets
+export { PINTO_LOGO_DATA_URL } from './assets/logo.js'
+
 // Server / Backend Authentication
 export { PintoServerAuth } from './server.js'
 export type { PintoServerConfig, ServerAuthorizeUrlResult } from './server.js'
