@@ -213,7 +213,7 @@ export function getPintoButtonHtml(options: PintoButtonOptions = {}): string {
         color: ${theme.color};
         border: ${theme.border};
         border-radius: ${borderRadius};
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: none;
         outline: none;
         box-sizing: border-box;
       "
@@ -261,7 +261,7 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
     color: theme.color,
     border: theme.border,
     borderRadius,
-    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    boxShadow: 'none',
     outline: 'none',
     boxSizing: 'border-box',
   })
@@ -275,17 +275,14 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
   if (!options.disabled && !options.loading) {
     button.addEventListener('mouseenter', () => {
       button.style.background = theme.hoverBackground
-      button.style.transform = 'translateY(-1px)'
-      button.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      button.style.boxShadow = 'none'
     })
     button.addEventListener('mouseleave', () => {
       button.style.background = theme.background
-      button.style.transform = 'translateY(0)'
-      button.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+      button.style.boxShadow = 'none'
     })
     button.addEventListener('mousedown', () => {
       button.style.background = theme.activeBackground
-      button.style.transform = 'translateY(0)'
     })
   }
 
