@@ -1,6 +1,6 @@
 {
   "name": "pinto-sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official JavaScript/TypeScript SDK for Pinto Developer Platform & SSO Auth",
   "type": "module",
   "main": "./dist/index.cjs",

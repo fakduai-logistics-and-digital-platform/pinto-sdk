@@ -30,7 +30,7 @@ describe('Pinto Button Component', () => {
     expect(html).toContain('Sign in with Pinto')
     expect(html).toContain('border-radius: 9999px')
     expect(html).toContain('width: 100%')
-    expect(html).toContain('background: #ffffff')
+    expect(html).toContain('background: #2ecc71')
   })
 
   it('supports iconOnly mode', () => {

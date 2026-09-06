@@ -14,11 +14,11 @@ export interface PintoButtonOptions {
 
   /**
    * Visual theme:
-   * - 'dark': Black background, crisp white logo & text (Default)
-   * - 'light': Clean white background with dark border and text
+   * - 'light': Pinto signature green background (#2ecc71) with white text & logo (Default)
+   * - 'dark': Black background, crisp white logo & text
    * - 'brand': Pinto signature brand purple/blue accent (#696CFF)
    * - 'outline': Transparent background with outline border
-   * @default 'dark'
+   * @default 'light'
    */
   theme?: PintoButtonTheme
 
@@ -114,11 +114,11 @@ const THEME_MAP: Record<PintoButtonTheme, ThemeStyles> = {
     activeBackground: '#030712',
   },
   light: {
-    background: '#ffffff',
-    color: '#111827',
-    border: '1px solid #e5e7eb',
-    hoverBackground: '#f9fafb',
-    activeBackground: '#f3f4f6',
+    background: '#2ecc71',
+    color: '#ffffff',
+    border: '1px solid #27ae60',
+    hoverBackground: '#27ae60',
+    activeBackground: '#219653',
   },
   brand: {
     background: '#696cff',
@@ -170,19 +170,15 @@ const SHAPE_MAP: Record<PintoButtonShape, string> = {
  * Generate raw HTML string for the Pinto Login Button (suitable for SSR or static HTML)
  */
 export function getPintoButtonHtml(options: PintoButtonOptions = {}): string {
-  const theme = THEME_MAP[options.theme || 'dark']
+  const theme = THEME_MAP[options.theme || 'light']
   const size = SIZE_MAP[options.size || 'medium']
   const borderRadius = SHAPE_MAP[options.shape || 'rounded']
   const logoUrl = options.customLogoUrl || PINTO_LOGO_DATA_URL
   const text = options.text ?? 'เข้าสู่ระบบด้วย Pinto'
   const isIconOnly = Boolean(options.iconOnly)
 
-  const isLight = options.theme === 'light'
-  const badgeStyle = isLight
-    ? 'background: #0f172a; border-radius: 6px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;'
-    : 'display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;'
-  const imgStyle = `width: ${size.iconSize}; height: ${size.iconSize}; object-fit: contain; display: block;`
-  const imgTag = `<span style="${badgeStyle}"><img src="${logoUrl}" alt="Pinto" style="${imgStyle}" /></span>`
+  const imgStyle = `width: ${size.iconSize}; height: ${size.iconSize}; object-fit: contain; display: inline-block; flex-shrink: 0;`
+  const imgTag = `<img src="${logoUrl}" alt="Pinto" style="${imgStyle}" />`
 
   const content = isIconOnly
     ? imgTag
@@ -235,7 +231,7 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
     throw new Error('createPintoButton requires a DOM browser environment')
   }
 
-  const theme = THEME_MAP[options.theme || 'dark']
+  const theme = THEME_MAP[options.theme || 'light']
   const size = SIZE_MAP[options.size || 'medium']
   const borderRadius = SHAPE_MAP[options.shape || 'rounded']
   const logoUrl = options.customLogoUrl || PINTO_LOGO_DATA_URL
@@ -268,7 +264,6 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
     boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     outline: 'none',
     boxSizing: 'border-box',
-    opacity: options.disabled ? '0.5' : options.loading ? '0.7' : '1',
   })
 
   // Apply custom style overrides if provided
@@ -295,16 +290,6 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
   }
 
   // Logo Image Element
-  const isLight = options.theme === 'light'
-  const imgWrapper = document.createElement('span')
-  Object.assign(imgWrapper.style, {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: '0',
-    ...(isLight ? { background: '#0f172a', borderRadius: '6px', padding: '3px' } : {}),
-  })
-
   const img = document.createElement('img')
   img.src = logoUrl
   img.alt = 'Pinto'
@@ -312,13 +297,13 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
     width: size.iconSize,
     height: size.iconSize,
     objectFit: 'contain',
-    display: 'block',
+    display: 'inline-block',
+    flexShrink: '0',
   })
-  imgWrapper.appendChild(img)
 
   // Render children
   if (isIconOnly) {
-    button.appendChild(imgWrapper)
+    button.appendChild(img)
     button.setAttribute('aria-label', options.text || 'Log in with Pinto')
   } else {
     const textSpan = document.createElement('span')
@@ -326,9 +311,9 @@ export function createPintoButton(options: PintoButtonOptions = {}): HTMLButtonE
 
     if (options.logoPosition === 'right') {
       button.appendChild(textSpan)
-      button.appendChild(imgWrapper)
+      button.appendChild(img)
     } else {
-      button.appendChild(imgWrapper)
+      button.appendChild(img)
       button.appendChild(textSpan)
     }
   }
