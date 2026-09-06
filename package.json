@@ -1,0 +1,46 @@
+{
+  "name": "@pinto-app/sdk",
+  "version": "0.1.0",
+  "description": "Official JavaScript/TypeScript SDK for Pinto Developer Platform & SSO Auth",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "pinto",
+    "pinto-app",
+    "sso",
+    "oauth2",
+    "pkce",
+    "sdk",
+    "authentication"
+  ],
+  "author": "Pinto Team",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
