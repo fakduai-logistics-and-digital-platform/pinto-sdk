@@ -119,7 +119,6 @@ const THEME_MAP: Record<PintoButtonTheme, ThemeStyles> = {
     border: '1px solid #e5e7eb',
     hoverBackground: '#f9fafb',
     activeBackground: '#f3f4f6',
-    logoFilter: 'invert(1) brightness(0.2)', // Inverts white logo to dark for light theme
   },
   brand: {
     background: '#696cff',
