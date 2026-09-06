@@ -1,4 +1,4 @@
-# @pinto-app/sdk
+# pinto-sdk
 
 Official JavaScript/TypeScript SDK for **Pinto Developer Platform & Pinto SSO (OAuth 2.0 + PKCE)**.
 
@@ -10,13 +10,13 @@ Official JavaScript/TypeScript SDK for **Pinto Developer Platform & Pinto SSO (O
 
 ```bash
 # npm
-npm install @pinto-app/sdk
+npm install pinto-sdk
 
 # pnpm
-pnpm add @pinto-app/sdk
+pnpm add pinto-sdk
 
 # yarn
-yarn add @pinto-app/sdk
+yarn add pinto-sdk
 ```
 
 ---
@@ -28,7 +28,7 @@ yarn add @pinto-app/sdk
 สร้าง instance ของ `PintoAuth` ด้วย `clientId` และ `redirectUri` ที่ลงทะเบียนไว้ใน [Pinto Developer Portal](https://developers.pinto-app.com):
 
 ```ts
-import { PintoAuth } from '@pinto-app/sdk'
+import { PintoAuth } from 'pinto-sdk'
 
 export const pinto = new PintoAuth({
   clientId: 'pinto-app_xxxxxxxxxxxx',
@@ -46,7 +46,7 @@ export const pinto = new PintoAuth({
 คุณสามารถสร้างปุ่มล็อกอินทางการของ Pinto ที่ฝังรูปโลโก้ต้นฉบับมาให้ในตัว พร้อมปรับแต่ง Theme, ขนาด, รูปทรง และผูกกับ `auth` เพื่อให้กดแล้วนำทางไปล็อกอินได้ทันที:
 
 ```ts
-import { renderPintoButton, createPintoButton } from '@pinto-app/sdk'
+import { renderPintoButton, createPintoButton } from 'pinto-sdk'
 
 // วิธีที่ 1: แปะลงใน HTML Container (เช่น <div id="login-container"></div>)
 renderPintoButton('#login-container', {
@@ -142,7 +142,7 @@ import {
   generateRandomString,
   generateCodeVerifier,
   computeCodeChallenge,
-} from '@pinto-app/sdk'
+} from 'pinto-sdk'
 
 // สร้าง Code Verifier (RFC 7636)
 const verifier = generateCodeVerifier(64)

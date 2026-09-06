@@ -14,9 +14,9 @@ Repository นี้รวบรวม Official SDK ของ Pinto ครบท
 
 ### 1. TypeScript / JavaScript
 ```bash
-npm install @pinto-app/sdk
+npm install pinto-sdk
 # or
-pnpm add @pinto-app/sdk
+pnpm add pinto-sdk
 ```
 
 ### 2. Golang
@@ -37,7 +37,7 @@ pip install pinto-sdk
 
 #### 🔹 TypeScript / Browser (มีปุ่มสำเร็จรูปให้ใช้งานทันที!)
 ```ts
-import { PintoAuth, renderPintoButton } from '@pinto-app/sdk'
+import { PintoAuth, renderPintoButton } from 'pinto-sdk'
 
 const pinto = new PintoAuth({
   clientId: 'pinto-app_xxxxxxxx',
@@ -110,7 +110,7 @@ user = auth.get_user_profile(access_token=tokens.access_token)
 
 #### 🔹 TypeScript (Node.js)
 ```ts
-import { verifyWebhookSecret, parseWebhookEvent, createReplyResponse } from '@pinto-app/sdk'
+import { verifyWebhookSecret, parseWebhookEvent, createReplyResponse } from 'pinto-sdk'
 
 if (verifyWebhookSecret(req.headers['x-pinto-secret'], 'WEBHOOK_SECRET')) {
   const event = parseWebhookEvent(req.body)
@@ -141,7 +141,7 @@ if verify_webhook_secret(header_secret, "WEBHOOK_SECRET"):
 
 ```text
 pinto-sdk/
-├── typescript/        # @pinto-app/sdk source & tests
+├── typescript/        # pinto-sdk source & tests
 ├── go/                # github.com/fakduai-logistics-and-digital-platform/pinto-sdk/go
 ├── python/            # pinto-sdk source & tests
 └── README.md          # เอกสารหน้านี้

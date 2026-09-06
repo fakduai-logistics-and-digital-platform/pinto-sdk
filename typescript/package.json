@@ -1,5 +1,5 @@
 {
-  "name": "@pinto-app/sdk",
+  "name": "pinto-sdk",
   "version": "0.1.0",
   "description": "Official JavaScript/TypeScript SDK for Pinto Developer Platform & SSO Auth",
   "type": "module",
