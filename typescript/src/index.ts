@@ -14,6 +14,30 @@ export type {
   PintoButtonTheme,
 } from './button.js'
 
+// Mini App (In-App WebView + JSBridge)
+export {
+  PintoMiniApp,
+  pintoMiniApp,
+  pintoMiniApp as miniApp,
+  createPintoMiniApp,
+} from './miniapp.js'
+export type {
+  BridgeMessage,
+  BridgeResponse,
+  FriendshipResult,
+  HapticFeedbackType,
+  LoginOptions,
+  MiniAppContext,
+  MiniAppInitOptions,
+  MiniAppMessage,
+  MiniAppMessageAction,
+  MiniAppOS,
+  MiniAppProfile,
+  MiniAppRegistration,
+  MiniAppScope,
+  ScanCodeResult,
+} from './miniapp-types.js'
+
 // Assets
 export { PINTO_LOGO_DATA_URL } from './assets/logo.js'
 
