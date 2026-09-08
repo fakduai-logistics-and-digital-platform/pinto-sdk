@@ -34,6 +34,17 @@ export function generateCodeVerifier(length = 64): string {
   return generateRandomString(validLength)
 }
 
+interface NodeBufferCtor {
+  from(data: Uint8Array | string, encoding?: string): { toString(encoding: string): string }
+}
+
+/**
+ * Node's Buffer, when running outside a browser. Reached via globalThis because
+ * this package targets the DOM lib only — naming the bare `Buffer` global would
+ * require @types/node, which would leak Node globals into every consumer's build.
+ */
+const nodeBuffer = (globalThis as { Buffer?: NodeBufferCtor }).Buffer
+
 /**
  * Convert an ArrayBuffer or Uint8Array to Base64URL string without padding
  */
@@ -48,8 +59,8 @@ export function base64UrlEncode(buffer: ArrayBuffer | Uint8Array): string {
   let base64 = ''
   if (typeof btoa === 'function') {
     base64 = btoa(binary)
-  } else if (typeof Buffer !== 'undefined') {
-    base64 = Buffer.from(bytes).toString('base64')
+  } else if (nodeBuffer) {
+    base64 = nodeBuffer.from(bytes).toString('base64')
   } else {
     throw new Error('No base64 encoding implementation available')
   }
