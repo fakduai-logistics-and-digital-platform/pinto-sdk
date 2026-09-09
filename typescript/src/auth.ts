@@ -179,6 +179,86 @@ export class PintoAuth {
   }
 
   /**
+   * Same callback, but the code is redeemed by a backend endpoint instead of by
+   * this browser. Pinto SSO's /oauth/token sends no CORS headers, so a page on a
+   * developer's own domain cannot call it directly — and a public client has no
+   * business holding the exchange anyway.
+   *
+   * `proxyUrl` must accept `{ code, code_verifier, redirect_uri, client_id }` and
+   * answer `{ ok, data: { tokens, user } }` (the portal's POST /api/v1/auth/exchange).
+   */
+  public async exchangeViaProxy(proxyUrl: string, callbackUrl?: string): Promise<PintoSession> {
+    const url = new URL(
+      callbackUrl ?? (typeof window !== 'undefined' ? window.location.href : ''),
+    )
+
+    const error = url.searchParams.get('error')
+    if (error) {
+      throw new PintoOAuthServerError(error, url.searchParams.get('error_description') ?? undefined)
+    }
+
+    const code = url.searchParams.get('code')
+    if (!code) {
+      throw new PintoAuthError('No authorization code found in callback URL')
+    }
+
+    const state = url.searchParams.get('state')
+    if (!state) {
+      throw new PintoAuthError('Missing state parameter in callback URL')
+    }
+
+    const verifierKey = `${this.prefix}verifier_${state}`
+    const codeVerifier = await this.storage.getItem(verifierKey)
+    if (!codeVerifier) {
+      throw new PintoAuthError('Invalid or expired state: code_verifier not found. Please initiate login again.')
+    }
+
+    const res = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        code,
+        code_verifier: codeVerifier,
+        redirect_uri: this.config.redirectUri,
+        client_id: this.config.clientId,
+      }),
+    })
+
+    await this.storage.removeItem(verifierKey)
+    await this.storage.removeItem(`${this.prefix}state`)
+
+    const body = (await res.json().catch(() => ({}))) as {
+      ok?: boolean
+      data?: {
+        tokens: { access_token: string; token_type: string; expires_in?: number; refresh_token?: string }
+        user?: Record<string, unknown>
+      }
+      error?: { message?: string } | string
+    }
+
+    if (!res.ok || !body?.ok || !body.data) {
+      const message =
+        typeof body?.error === 'string' ? body.error : body?.error?.message
+      throw new PintoAuthError(message || `Token exchange failed via proxy (HTTP ${res.status})`)
+    }
+
+    const { tokens, user } = body.data
+    const expiresIn = tokens.expires_in ?? 3600
+    const session: PintoSession = {
+      accessToken: tokens.access_token,
+      tokenType: tokens.token_type,
+      expiresIn,
+      expiresAt: Date.now() + expiresIn * 1000,
+      refreshToken: tokens.refresh_token,
+      user: user as unknown as PintoUser | undefined,
+    }
+
+    await this.storage.setItem(`${this.prefix}session`, JSON.stringify(session))
+
+    return session
+  }
+
+  /**
    * Fetch user profile from Pinto SSO using access token
    */
   public async fetchUserProfile(accessToken: string): Promise<PintoUser> {

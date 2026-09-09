@@ -80,6 +80,17 @@ export interface MiniAppInitOptions {
    * during init to resolve the registration and its granted scopes.
    */
   apiBaseUrl?: string
+  /**
+   * Pinto SSO base used by the external-browser login path. Defaults to production;
+   * point it at the dev SSO when the app_id was issued there.
+   */
+  ssoBaseUrl?: string
+  /**
+   * Redeem the authorization code through the portal's `POST /api/v1/auth/exchange`
+   * instead of calling Pinto SSO's token endpoint from the page. Required in an
+   * external browser: `/oauth/token` sends no CORS headers.
+   */
+  exchangeViaBackend?: boolean
   /** Force the mock bridge on, regardless of environment detection. */
   mock?: boolean
   /** Profile returned by the mock bridge while developing on a desktop browser. */

@@ -228,6 +228,33 @@ export class PintoMiniApp {
     })
   }
 
+  /**
+   * Finish the external-browser login. Call it on every page load: it is a no-op
+   * unless the URL carries the `?code=&state=` the SSO redirect brought back.
+   * Returns true when a session was established by this call.
+   */
+  async handleLoginCallback(): Promise<boolean> {
+    this.assertReady()
+    if (this.bridgeAnswersIdentity || typeof window === 'undefined') return false
+
+    const params = new URLSearchParams(window.location.search)
+    if (!params.get('code') || !params.get('state')) return false
+
+    if (this.options!.exchangeViaBackend) {
+      const base = (this.options!.apiBaseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '')
+      await this.getAuth().exchangeViaProxy(`${base}/api/v1/auth/exchange`)
+    } else {
+      await this.getAuth().handleRedirectCallback()
+    }
+    this.cachedLoggedIn = true
+
+    // Drop the one-time code from the address bar so a reload cannot replay it.
+    const clean = `${window.location.origin}${window.location.pathname}${window.location.hash}`
+    window.history.replaceState({}, '', clean)
+
+    return true
+  }
+
   async logout(): Promise<void> {
     if (this.bridgeAnswersIdentity) return
 
@@ -247,9 +274,12 @@ export class PintoMiniApp {
       throw new PintoAuthError('No Pinto session. Call pinto.login() first when running outside the Pinto app.')
     }
 
+    const u = user as typeof user & { display_name?: string; username?: string }
+
     return {
       userId: String(user.id ?? user.sub),
-      displayName: user.name ?? '',
+      // The proxy exchange returns the portal's shape, which names it display_name.
+      displayName: user.name ?? u.display_name ?? u.username ?? '',
       pictureUrl: user.picture,
       email: user.email,
     }
@@ -431,8 +461,13 @@ export class PintoMiniApp {
     if (!this.auth) {
       this.auth = new PintoAuth({
         clientId: this.options!.appId,
-        redirectUri: typeof window === 'undefined' ? '' : (window.location?.href ?? ''),
-        ssoBaseUrl: DEFAULT_SSO_BASE_URL,
+        // origin + pathname, never href: the same value is replayed as `redirect_uri`
+        // at token exchange, and on the way back the URL carries ?code=&state=.
+        redirectUri:
+          typeof window === 'undefined'
+            ? ''
+            : `${window.location.origin}${window.location.pathname}`,
+        ssoBaseUrl: this.options!.ssoBaseUrl || DEFAULT_SSO_BASE_URL,
         scope: this.getGrantedScopes(),
       })
     }
